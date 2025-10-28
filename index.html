@@ -11,78 +11,89 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         header {
             text-align: center;
             margin-bottom: 40px;
-            color: white;
         }
-        
+
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .card-thumbnail {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
-        }
-        
-        .card-content {
-            padding: 20px;
-        }
-        
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.8rem;
             margin-bottom: 10px;
             color: #333;
         }
-        
+
+        header p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: none;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-thumbnail {
+            width: 100%;
+            height: 200px;
+            background-color: #eee;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: normal;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
         .card-meta {
             display: flex;
             justify-content: space-between;
@@ -90,48 +101,36 @@
             font-size: 0.9rem;
             margin-bottom: 15px;
         }
-        
+
         .card-actions {
             display: flex;
             gap: 10px;
         }
-        
+
         .btn {
             flex: 1;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: white;
+            color: #333;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        
-        .btn-detail {
-            background: #667eea;
-            color: white;
+
+        .btn:hover {
+            background-color: #f0f0f0;
         }
-        
-        .btn-detail:hover {
-            background: #5a6fd8;
-        }
-        
-        .btn-download {
-            background: #4ecdc4;
-            color: white;
-        }
-        
-        .btn-download:hover {
-            background: #3dbdb0;
-        }
+
         /* Modal Styles */
-        
+
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -140,145 +139,142 @@
             visibility: hidden;
             transition: all 0.3s ease;
         }
-        
+
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
-        
+
+        /* ===== Modal Container ===== */
         .modal {
-            width: 75%;
-            height: 75%;
+            width: 80%;
+            height: 80vh;
+            /* 固定视口高度，避免内容撑开 */
             background: white;
-            border-radius: 20px;
+            border-radius: 0;
             overflow: hidden;
             position: relative;
             transform: scale(0.8);
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            /* 确保子元素垂直排列 */
         }
-        
+
         .modal-overlay.active .modal {
             transform: scale(1);
         }
-        
+
+        /* ===== Modal Header ===== */
         .modal-header {
-            padding: 20px;
-            background: #667eea;
+            padding: 15px 20px;
+            background: #333;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
-        
+
+        /* ===== Modal Body ===== */
+        .modal-body {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .modal-body iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            min-height: 100px;
+        }
+
         .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: normal;
         }
-        
+
         .modal-close {
             background: none;
             border: none;
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background 0.2s ease;
         }
-        
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .modal-body {
-            height: calc(75vh - 120px);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-        }
-        
+
         .pdf-placeholder {
             color: #666;
-            font-size: 1.2rem;
+            font-size: 1rem;
             line-height: 1.6;
+            padding: 50px;
+            text-align: center;
         }
-        
+
         .pdf-placeholder strong {
-            color: #667eea;
+            color: #333;
             display: block;
             margin: 10px 0;
         }
-        
+
         .modal-footer {
-            padding: 15px 20px;
-            background: #f8f9fa;
+            padding: 10px 20px;
+            background: #f5f5f5;
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
-        
+
         .modal-btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
+            padding: 6px 15px;
+            border: 1px solid #ddd;
+            background-color: white;
+            color: #333;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
-        
-        .modal-btn-download {
-            background: #4ecdc4;
-            color: white;
+
+        .modal-btn:hover {
+            background-color: #f0f0f0;
         }
-        
-        .modal-btn-download:hover {
-            background: #3dbdb0;
-        }
-        
-        .modal-btn-close {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .modal-btn-close:hover {
-            background: #5a6268;
-        }
-        /* Loading state */
-        
-        .loading {
-            text-align: center;
-            color: white;
-            font-size: 1.2rem;
-            padding: 50px;
-        }
+
         /* Responsive Design */
-        
+
         @media (max-width: 768px) {
             .gallery {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 15px;
             }
+
             .modal {
                 width: 95%;
-                height: 85%;
+                height: 90vh;
+                max-height: 95vh;
             }
+
             header h1 {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
         }
-        
+
         @media (max-width: 480px) {
             .gallery {
                 grid-template-columns: 1fr;
             }
+
             .card-actions {
                 flex-direction: column;
             }
+
             .btn {
                 width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -287,7 +283,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>📰 报纸期刊展示平台</h1>
+            <h1>K二2英语研学小组报纸期刊展示平台</h1>
             <p>点击查看详情，支持在线预览和下载</p>
         </header>
 
@@ -303,101 +299,85 @@
                 <button class="modal-close" id="modal-close">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="pdf-placeholder">
-                    <p>PDF 文件预览区域</p>
-                    <strong>文件名：<span id="modal-filename"></span></strong>
-                    <p>点击下方下载按钮获取完整 PDF 文件</p>
-                    <p>（注：浏览器安全限制，无法直接内嵌显示本地 PDF）</p>
-                </div>
+                <iframe id="pdf-viewer-iframe" style="width:100%; height:100%; border:none;"></iframe>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn modal-btn-close" id="modal-close-footer">关闭</button>
-                <button class="modal-btn modal-btn-download" id="modal-download">下载 PDF</button>
+                <button class="modal-btn" id="modal-close-footer">关闭</button>
+                <button class="modal-btn" id="modal-download">下载 PDF</button>
             </div>
         </div>
     </div>
-
-    <!-- 只替换原来的 <script>…</script> 部分 -->
     <script>
         /* ========== 1. 数据 ========== */
         const pdfFiles = [{
             id: 1,
-            filename: 'English School Sports Newsflash_20251025214144.pdf',
+            filename: 'English_School_Sports_Newsflash_20251025214144.pdf',
             title: '2025年10月第一刊报纸',
             date: '2025-10-27',
-            size: '633 KB'
+            size: '633 KB',
+            thumbnail: 'thumbnail/1.png'
         }];
 
         /* ========== 2. DOM 引用 ========== */
         const gallery = document.getElementById('gallery');
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.querySelector('.modal-body'); // 用来放 iframe
+        const modalBody = document.querySelector('.modal-body');
         const modalClose = document.getElementById('modal-close');
         const modalCloseFoot = document.getElementById('modal-close-footer');
         const modalDownload = document.getElementById('modal-download');
 
-        let currentPdf = null; // 当前弹窗对应的 pdf 对象
-        let currentBlob = null; // 当前打开的 blob 地址，关闭时释放
+        let currentPdf = null;
 
         /* ========== 3. 生成卡片 ========== */
         function generateCards() {
             if (!pdfFiles.length) return gallery.innerHTML = '<div class="loading">暂无期刊文件</div>';
 
             gallery.innerHTML = pdfFiles.map(pdf => `
-    <div class="card">
-      <div class="card-thumbnail">📄</div>
-      <div class="card-content">
-        <h3 class="card-title">${pdf.title}</h3>
-        <div class="card-meta">
-          <span>${pdf.date}</span><span>${pdf.size}</span>
+        <div class="card">
+        <div class="card-thumbnail"><img src="${pdf.thumbnail}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTkiPkltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4='" /></div>
+        <div class="card-content">
+            <h3 class="card-title">${pdf.title}</h3>
+            <div class="card-meta">
+            <span>${pdf.date}</span><span>${pdf.size}</span>
+            </div>
+            <div class="card-actions">
+            <button class="btn" onclick="showPdfDetails(${pdf.id})">详情</button>
+            <button class="btn" onclick="downloadPdf('${pdf.filename}')">下载</button>
+            </div>
         </div>
-        <div class="card-actions">
-          <button class="btn btn-detail"  onclick="showPdfDetails(${pdf.id})">详情</button>
-          <button class="btn btn-download" onclick="downloadPdf('${pdf.filename}')">下载</button>
-        </div>
-      </div>
-    </div>`).join('');
+        </div>`).join('');
         }
 
         /* ========== 4. 弹窗内嵌 PDF ========== */
-        window.showPdfDetails = async function(id) {
+        window.showPdfDetails = function (id) {
             const pdf = pdfFiles.find(p => p.id === id);
             if (!pdf) return;
 
             currentPdf = pdf;
             modalTitle.textContent = pdf.title;
-            modalBody.innerHTML = '<div style="color:#666">正在加载 PDF…</div>';
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            const baseUrl = window.location.origin;
+            const encodedFilename = encodeURIComponent(pdf.filename);
+            const pdfUrl = `${baseUrl}/docs/${encodedFilename}`;
+            console.log(window.location.origin);
+            const viewerUrl = `/pdf-viewer/viewer?file=${encodeURIComponent(pdfUrl)}&disablePrint=true&disableDownload=true`;
 
-            try {
-                const res = await fetch(`docs/${pdf.filename}`); // 读取本地文件
-                const blob = await res.blob(); // 转成 blob
-                currentBlob = URL.createObjectURL(blob); // 生成临时安全地址
+            console.log(viewerUrl);
 
-                modalBody.innerHTML = `
-      <iframe src="${currentBlob}" width="100%" height="100%" frameborder="0"></iframe>`;
-            } catch (e) {
-                modalBody.innerHTML = `<p style="color:red">加载失败，请检查 docs 文件夹内是否存在 <strong>${pdf.filename}</strong></p>`;
-            }
+            const iframe = document.getElementById('pdf-viewer-iframe');
+            iframe.src = viewerUrl;
         };
 
         /* ========== 5. 下载 / 关闭 ========== */
-        window.downloadPdf = function(filename) {
-            const a = document.createElement('a');
-            a.href = `docs/${filename}`;
-            a.download = filename;
-            a.click();
+        window.downloadPdf = function (filename) {
+            window.open(`docs/${filename}`);
         };
 
         function closeModal() {
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
-            if (currentBlob) { // 释放内存
-                URL.revokeObjectURL(currentBlob);
-                currentBlob = null;
-            }
             currentPdf = null;
         }
 
