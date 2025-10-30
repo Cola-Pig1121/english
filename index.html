@@ -562,33 +562,28 @@
             resultDiv.style.display = 'block';
 
             try {
-                const response = await fetch(`https://dict.youdao.com/jsonapi?q=${encodeURIComponent(wordInput)}`);
-                const data = await response.json();
+                const target = `http://dict.youdao.com/suggest?q=${encodeURIComponent(wordInput)}&num=1&doctype=json`;
+                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(target)}`);
+                if (!res.ok) throw new Error('网络错误');
 
-                // 检查是否有 web_trans 数据
-                if (data.web_trans && data.web_trans['web-translation'] && data.web_trans['web-translation'].length > 0) {
-                    const transList = data.web_trans['web-translation'][0].trans;
+                const json = await res.json();
+                const entry = json?.data?.entries?.[0];
 
-                    resultWordEl.textContent = wordInput;
-                    let html = '';
-                    transList.slice(0, 4).forEach(item => {
-                        // 清理 summary 中的 HTML 标签（如 <b>），只保留纯文本
-                        const cleanSummary = item.summary.line[0]
-                            .replace(/<[^>]*>/g, '') // 移除所有 HTML 标签
-                            .replace(/\s+/g, ' ')   // 合并多余空格
-                            .trim();
-
-                        html += `<p>• ${cleanSummary}</p>`;
-                    });
-                    resultDefsEl.innerHTML = html;
+                if (entry && entry.explain) {
+                    resultWordEl.textContent = entry.entry;
+                    // 按分号拆成多条，更美观
+                    resultDefsEl.innerHTML = entry.explain
+                        .split(/；|;/)
+                        .map(e => `<p>• ${e.trim()}</p>`)
+                        .join('');
                 } else {
                     resultWordEl.textContent = wordInput;
                     resultDefsEl.innerHTML = '<p>未找到相关释义。</p>';
                 }
-            } catch (error) {
-                console.error('查询失败:', error);
+            } catch (err) {
+                console.error(err);
                 resultWordEl.textContent = '查询失败';
-                resultDefsEl.innerHTML = '<p>网络错误或服务不可用，请稍后重试。</p>';
+                resultDefsEl.innerHTML = '<p>服务暂不可用，请稍后再试。</p>';
             }
         });
     </script>
