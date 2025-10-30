@@ -278,6 +278,62 @@
             }
         }
     </style>
+    <style>
+        .survey-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .survey-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -306,6 +362,31 @@
                 <button class="modal-btn" id="modal-download">下载 PDF</button>
             </div>
         </div>
+    </div>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- Survey Form HTML -->
+    <div class="survey-container">
+        <h2>问卷调查 / Survey</h2>
+        <form id="surveyForm" class="survey-form">
+            <div class="form-group">
+                <label for="name">姓名 / Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">邮箱 / Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feedback">反馈 / Feedback:</label>
+                <textarea id="feedback" name="feedback" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">提交 / Submit</button>
+        </form>
     </div>
     <script>
         /* ========== 1. 数据 ========== */
@@ -396,6 +477,48 @@
 
         /* ========== 7. 初始化 ========== */
         document.addEventListener('DOMContentLoaded', generateCards);
+    </script>
+    <script>
+        (function () {
+            // 使用 public key 初始化 EmailJS
+            emailjs.init("FaW-BqFo2LuvEoWMH");
+
+            document.getElementById('surveyForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                // Show loading state
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerHTML;
+                submitButton.innerHTML = '发送中... / Sending...';
+                submitButton.disabled = true;
+
+                // Prepare the email parameters
+                const templateParams = {
+                    name: this.name.value,
+                    email: this.email.value,
+                    feedback: this.feedback.value
+                };
+
+                // Send the email using EmailJS
+                emailjs.send(
+                    'service_fq5leqt', // Replace with your EmailJS service ID
+                    'template_heim30m', // Replace with your EmailJS template ID
+                    templateParams
+                )
+                    .then(function () {
+                        alert('感谢您的反馈！/ Thank you for your feedback!');
+                        document.getElementById('surveyForm').reset();
+                    })
+                    .catch(function (error) {
+                        alert('发送失败，请稍后重试。/ Failed to send, please try again later.');
+                        console.error('EmailJS error:', error);
+                    })
+                    .finally(function () {
+                        submitButton.innerHTML = originalButtonText;
+                        submitButton.disabled = false;
+                    });
+            });
+        })();
     </script>
 </body>
 
